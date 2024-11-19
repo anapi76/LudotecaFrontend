@@ -1,14 +1,39 @@
-# Tutorial
+# Tutorial Ludoteca Project
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.11.
+
+A web application built with Angular version 17.3.11. to manage a ludoteca (board game library), where users can manage games, categories, and authors.
+
+## Git
+
+https://github.com/anapi76/LudotecaCliente.git
 
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
 
-## Code scaffolding
+## Added Angular Material
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Added [Angular Material](https://material.angular.io/) to this project for UI components and styling.
+
+### Steps followed:
+1. Installed Angular Material using `ng add @angular/material`.
+2. Selected a prebuilt theme.
+3. Configured global typography styles (optional).
+4. Enabled animations (optional). 
+
+## Core
+
+Contains essential components and services used across the application, such as the header and confirmation dialogs.
+
+- header: Global header component for navigation.
+- confirmation-dialog: Reusable dialog component for confirmation actions.
+
+## View Categories
+
+- category-list: Displays a list of all categories.
+- category-edit: Modal for adding or editing a category.
+- models: Category.ts, mock-categories.ts
 
 ## Build
 
