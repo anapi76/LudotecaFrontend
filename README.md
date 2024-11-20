@@ -6,7 +6,7 @@ A web application built with Angular version 17.3.11. to manage a ludoteca (boar
 
 ## Git
 
-https://github.com/anapi76/LudotecaCliente.git
+https://github.com/anapi76/LudotecaFrontend.git
 
 ## Development server
 
