@@ -24,10 +24,13 @@ Added [Angular Material](https://material.angular.io/) to this project for UI co
 
 ## Core
 
-Contains essential components and services used across the application, such as the header and confirmation dialogs.
+Contains essential components and services used across the application.
 
 - header: Global header component for navigation.
 - confirmation-dialog: Reusable dialog component for confirmation actions.
+- model/page:  Contains essential classes for pagination management.
+    - `Pageable`: Represents the pagination details (page number, page size and sort).
+    - `SortPage`: Represents the sort details(property and direction).
 
 ## View Categories
 
