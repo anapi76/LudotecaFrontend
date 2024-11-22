@@ -35,6 +35,12 @@ Contains essential components and services used across the application, such as 
 - category-edit: Modal for adding or editing a category.
 - models: Category.ts, mock-categories.ts
 
+## View Authors
+
+- author-list: Displays a paginated list of all authors.
+- author-edit: Modal for adding or editing an author.
+- models: Author.ts, mock-authors.ts
+
 ## Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
