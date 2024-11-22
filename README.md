@@ -31,13 +31,13 @@ Contains essential components and services used across the application, such as 
 
 ## View Categories
 
-- category-list: Displays a list of all categories.
+- category-list: Displays a list of all categories, with buttons to update and delete a category, and button to add a new category.
 - category-edit: Modal for adding or editing a category.
 - models: Category.ts, mock-categories.ts
 
 ## View Authors
 
-- author-list: Displays a paginated list of all authors.
+- author-list: Displays a paginated list of all authors, with buttons to update and delete an author, and button to add a new author.
 - author-edit: Modal for adding or editing an author.
 - models: Author.ts, mock-authors.ts
 
