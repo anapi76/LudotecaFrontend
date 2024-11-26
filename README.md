@@ -36,26 +36,18 @@ Contains essential components and services used across the application.
 
 - category-list: Displays a list of all categories, with buttons to update and delete a category, and button to add a new category.
 - category-edit: Modal for adding or editing a category.
-- models: Category.ts, mock-categories.ts
+- models: Category.ts
 
 ## View Authors
 
 - author-list: Displays a paginated list of all authors, with buttons to update and delete an author, and button to add a new author.
 - author-edit: Modal for adding or editing an author.
-- models: Author.ts, mock-authors.ts
+- models: Author.ts, AuthorPage.ts.
 
-## Build
+## View Games
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- game-list: Display a list of all games, with posibility to filter by title and category. Also, there is a button to add a new game
+- game-edit: Modal for adding or editing a game.
+- game-item: Card with the details of the game.
+- models: Game.ts.
 
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
