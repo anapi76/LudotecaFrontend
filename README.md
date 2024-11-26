@@ -51,3 +51,9 @@ Contains essential components and services used across the application.
 - game-item: Card with the details of the game.
 - models: Game.ts.
 
+## View Customers
+
+- customer-list: Display a list of all customers, with buttons to update and delete a customer, and button to add a new customer.
+- customer-edit: Modal for adding or editing a customer.
+- models: Customer.ts.
+
