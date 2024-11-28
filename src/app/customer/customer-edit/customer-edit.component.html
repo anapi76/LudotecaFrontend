@@ -15,6 +15,7 @@
             <mat-label>Nombre</mat-label>
             <input type="text" matInput placeholder="Nombre de categoría" [(ngModel)]="customer.name" name="name" required>
             <mat-error>El nombre no puede estar vacío</mat-error>
+            <mat-error @if(nameAlreadyExists)>El nombre ya existe</mat-error>
         </mat-form-field>
     </form>
 
