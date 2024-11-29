@@ -17,7 +17,8 @@ import { CommonModule } from '@angular/common';
 })
 export class CustomerEditComponent implements OnInit {
   customer: Customer;
-  nameAlreadyExists: Boolean = false;
+  customers: Customer[];
+  nameExists: Boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<CustomerEditComponent>,
@@ -30,19 +31,18 @@ export class CustomerEditComponent implements OnInit {
   }
 
   onSave() {
-    if(this.customer.name){
-      this.customerService.getCustomer(this.customer.name).subscribe((existingCustomer) => {
-        if (existingCustomer) {
-          this.nameAlreadyExists = true;
-          this.customer.name = ''; 
-        } else {
-          this.nameAlreadyExists = false;
-          this.customerService.saveCustomer(this.customer).subscribe(() => {
-            this.dialogRef.close();
-          })
+    this.nameExists = false;
+    this.customerService.saveCustomer(this.customer).subscribe({
+      next: () => {
+        this.dialogRef.close();
+      },
+      error: (err) => {
+        if (err.status == 409) {
+          this.nameExists = true;
+          this.customer.name = '';
         }
-      });
-    }
+      }
+    })
   }
 
   onClose() {

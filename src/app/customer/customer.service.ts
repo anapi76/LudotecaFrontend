@@ -17,11 +17,6 @@ export class CustomerService {
     return this.http.get<Customer[]>(this.baseUrl);
   }
 
-  getCustomer(name:string):Observable<Customer|null>{
-    const url = `${this.baseUrl}/${name}`;
-    return this.http.get<Customer|null>(url);
-  }
-
   saveCustomer(customer:Customer):Observable<Customer>{
     const { id } = customer;
     const url = id ? `${this.baseUrl}/${id}` : this.baseUrl;
