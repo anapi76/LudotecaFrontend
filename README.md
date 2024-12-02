@@ -57,3 +57,9 @@ Contains essential components and services used across the application.
 - customer-edit: Modal for adding or editing a customer.
 - models: Customer.ts.
 
+## View Loans
+
+- loan-list: Display a list of all customers, with posibility to filter by game, customer and loan date. Also, there are buttons to to add a new loan and delete a loan.
+- customer-edit: Modal for adding a new loan.
+- models: Loan.ts.
+

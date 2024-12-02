@@ -1,0 +1,53 @@
+<div class="container">
+    <h1>Crear préstamo</h1>
+
+    <form>
+        <mat-form-field>
+            <mat-label>Identificador</mat-label>
+            <input type="text" matInput placeholder="Identificador" [(ngModel)]="loan.id" name="id" disabled>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Juego</mat-label>
+            <mat-select disableRipple [(ngModel)]="loan.game" name="game" required>
+                @for (game of games; track game.id) {
+                <mat-option [value]="game">{{game.title}}</mat-option>
+                }
+            </mat-select>
+            <mat-error>El juego no puede estar vacío</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Cliente</mat-label>
+            <mat-select disableRipple [(ngModel)]="loan.customer" name="customer" required>
+                @for (customer of customers; track customer.id) {
+                <mat-option [value]="customer">{{customer.name}}</mat-option>
+                }
+            </mat-select>
+            <mat-error>El cliente no puede estar vacío</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Fecha préstamo</mat-label>
+                <input matInput [min]="minDate" [max]="maxDate" [(ngModel)]="loan.loanDate" [matDatepicker]="loanPicker" name="loanDate"/>
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="loanPicker"></mat-datepicker-toggle>
+                <mat-datepicker #loanPicker></mat-datepicker>
+            <mat-error>La fecha no puede estar vacía</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Fecha devolución</mat-label>
+                <input matInput [min]="minDate" [max]="maxDate" [(ngModel)]="loan.returnDate" [matDatepicker]="returnPicker" name="returnDate"/>
+                <mat-hint>DD/MM/YYYY</mat-hint>
+                <mat-datepicker-toggle matIconSuffix [for]="returnPicker"></mat-datepicker-toggle>
+                <mat-datepicker #returnPicker></mat-datepicker>
+            <mat-error>La fecha no puede estar vacía</mat-error>
+        </mat-form-field>
+    </form>
+
+    <div class="buttons">
+        <button mat-stroked-button (click)="onClose()">Cerrar</button>
+        <button mat-flat-button color="primary" (click)="onSave()">Guardar</button>
+    </div>
+</div>

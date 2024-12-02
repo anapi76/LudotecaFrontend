@@ -3,12 +3,11 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmationComponent } from '../../core/dialog-confirmation/dialog-confirmation.component';
 import { Customer } from '../model/Customer';
 import { CustomerService } from '../customer.service';
 import { CustomerEditComponent } from '../customer-edit/customer-edit.component';
-
 
 @Component({
   selector: 'app-customer-list',
