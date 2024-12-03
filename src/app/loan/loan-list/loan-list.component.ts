@@ -4,7 +4,7 @@ import { Loan } from '../model/Loan';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { CommonModule, formatDate } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -25,7 +25,7 @@ import { Pageable } from '../../core/model/page/Pageable';
 @Component({
   selector: 'app-loan-list',
   standalone: true,
-  providers: [provideNativeDateAdapter()],
+  providers: [provideNativeDateAdapter(),DatePipe],
   imports: [MatTableModule, MatIconModule, MatButtonModule, CommonModule, FormsModule, MatInputModule, MatFormFieldModule, MatSelectModule, MatDatepickerModule, MatPaginator],
   templateUrl: './loan-list.component.html',
   styleUrl: './loan-list.component.scss'
@@ -54,7 +54,8 @@ export class LoanListComponent implements OnInit {
     private loanService: LoanService,
     private gameService: GameService,
     private customerService: CustomerService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private datePipe: DatePipe
   ) { }
 
   ngOnInit(): void {
@@ -78,7 +79,7 @@ export class LoanListComponent implements OnInit {
       pageable.pageSize = event.pageSize;
       pageable.pageNumber = event.pageIndex
     }
-  }
+  } 
 
   onCleanFilter(): void {
     this.filterGame = null;
@@ -90,9 +91,9 @@ export class LoanListComponent implements OnInit {
   onSearch(): void {
     const gameId = this.filterGame != null ? this.filterGame.id : null;
     const customerId = this.filterCustomer != null ? this.filterCustomer.id : null;
-    const selectedDate = this.filterDate;
-
-    this.loanService.getLoans(gameId, customerId, selectedDate).subscribe((loans) => this.loans = loans);
+    const selectedDate = this.filterDate != null ? this.datePipe.transform(this.filterDate, 'dd-MM-yyyy') : null;
+  
+    this.loanService.getLoans(gameId, customerId, selectedDate).subscribe((loans) => this.dataSource.data = loans);
   }
 
   createLoan() {
