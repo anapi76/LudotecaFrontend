@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-customer-edit',
@@ -18,12 +19,12 @@ import { CommonModule } from '@angular/common';
 export class CustomerEditComponent implements OnInit {
   customer: Customer;
   customers: Customer[];
-  nameExists: Boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<CustomerEditComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { customer: Customer },
-    private customerService: CustomerService
+    private customerService: CustomerService,
+    private snackbar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -31,16 +32,17 @@ export class CustomerEditComponent implements OnInit {
   }
 
   onSave() {
-    this.nameExists = false;
     this.customerService.saveCustomer(this.customer).subscribe({
       next: () => {
         this.dialogRef.close();
       },
       error: (err) => {
+        let errorMessage = "Ocurrió un error inesperado";
         if (err.status == 409) {
-          this.nameExists = true;
+          errorMessage = "El nombre del cliente ya existe";
           this.customer.name = '';
         }
+        this.snackbar.open(errorMessage, 'Ok', { verticalPosition: 'top', horizontalPosition: 'center' });
       }
     })
   }

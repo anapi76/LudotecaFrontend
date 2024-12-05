@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Loan } from '../model/Loan';
-
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -21,11 +20,12 @@ import { LoanEditComponent } from '../loan-edit/loan-edit.component';
 import { DialogConfirmationComponent } from '../../core/dialog-confirmation/dialog-confirmation.component';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Pageable } from '../../core/model/page/Pageable';
+import { LoanSearchDto } from '../model/LoanSearchDto';
 
 @Component({
   selector: 'app-loan-list',
   standalone: true,
-  providers: [provideNativeDateAdapter(),DatePipe],
+  providers: [provideNativeDateAdapter(), DatePipe],
   imports: [MatTableModule, MatIconModule, MatButtonModule, CommonModule, FormsModule, MatInputModule, MatFormFieldModule, MatSelectModule, MatDatepickerModule, MatPaginator],
   templateUrl: './loan-list.component.html',
   styleUrl: './loan-list.component.scss'
@@ -41,6 +41,7 @@ export class LoanListComponent implements OnInit {
   filterGame: Game;
   filterCustomer: Customer;
   filterDate: Date;
+  loanSearchDto: LoanSearchDto;
 
   pageNumber: number = 0;
   pageSize: number = 5;
@@ -61,9 +62,7 @@ export class LoanListComponent implements OnInit {
   ngOnInit(): void {
     this.gameService.getGames().subscribe((games) => this.games = games);
     this.customerService.getCustomers().subscribe((customers) => this.customers = customers);
-    this.loanService.getLoans().subscribe(
-      loans => this.dataSource.data = loans
-    );
+    this.loadPage()
   }
 
   loadPage(event?: PageEvent) {
@@ -79,7 +78,20 @@ export class LoanListComponent implements OnInit {
       pageable.pageSize = event.pageSize;
       pageable.pageNumber = event.pageIndex
     }
-  } 
+    this.loanSearchDto = {
+      pageable: pageable,
+      idGame: this.filterGame != null ? this.filterGame.id : null,
+      idCustomer: this.filterCustomer != null ? this.filterCustomer.id : null,
+      date: this.filterDate != null ? this.datePipe.transform(this.filterDate, 'dd-MM-yyyy') : null,
+    }
+    this.loanService.getLoans(this.loanSearchDto).subscribe((data) => {
+      this.dataSource.data = data.content;
+      this.pageNumber = data.pageable.pageNumber;
+      this.pageSize = data.pageable.pageSize;
+      this.totalElements = data.totalElements;
+    }
+    );
+  }
 
   onCleanFilter(): void {
     this.filterGame = null;
@@ -89,11 +101,7 @@ export class LoanListComponent implements OnInit {
   }
 
   onSearch(): void {
-    const gameId = this.filterGame != null ? this.filterGame.id : null;
-    const customerId = this.filterCustomer != null ? this.filterCustomer.id : null;
-    const selectedDate = this.filterDate != null ? this.datePipe.transform(this.filterDate, 'dd-MM-yyyy') : null;
-  
-    this.loanService.getLoans(gameId, customerId, selectedDate).subscribe((loans) => this.dataSource.data = loans);
+    this.loadPage();
   }
 
   createLoan() {
@@ -108,8 +116,8 @@ export class LoanListComponent implements OnInit {
   deleteLoan(loan: Loan) {
     const dialogRef = this.dialog.open(DialogConfirmationComponent, {
       data: {
-        title: "Eliminar cliente",
-        description: "Atención si borra el cliente se perderán sus datos.<br> ¿Desea eliminar el cliente?"
+        title: "Eliminar préstamo",
+        description: "Atención si borra el préstamo se perderán sus datos.<br> ¿Desea eliminar el préstamo?"
       }
     });
 

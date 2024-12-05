@@ -8,17 +8,19 @@ import { MatInputModule } from '@angular/material/input';
 import { Loan } from '../model/Loan';
 import { Game } from '../../game/model/Game';
 import { Customer } from '../../customer/model/Customer';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { LoanService } from '../loan.service';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { GameService } from '../../game/game.service';
 import { CustomerService } from '../../customer/customer.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 @Component({
   selector: 'app-loan-edit',
   standalone: true,
-  providers: [provideNativeDateAdapter()],
+  providers: [provideNativeDateAdapter(), { provide: MAT_DATE_LOCALE, useValue: 'es-ES' }],
   imports: [FormsModule, ReactiveFormsModule, MatButtonModule, MatInputModule, MatFormFieldModule, CommonModule, MatError, MatDatepickerModule, MatSelectModule],
   templateUrl: './loan-edit.component.html',
   styleUrl: './loan-edit.component.scss'
@@ -32,7 +34,7 @@ export class LoanEditComponent implements OnInit {
   returnDate: Date;
 
   private readonly _currentYear = new Date().getFullYear();
-  readonly minDate = new Date(this._currentYear - 20, 0, 1);
+  readonly minDate = new Date();
   readonly maxDate = new Date(this._currentYear + 1, 11, 31);
 
   constructor(
@@ -40,10 +42,13 @@ export class LoanEditComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { loan: Loan },
     private loanService: LoanService,
     private gameService: GameService,
-    private customerService: CustomerService
+    private customerService: CustomerService,
+    public dialog: MatDialog,
+    private snackbar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
+    
     this.loan = this.data.loan ? Object.assign({}, this.data.loan) : new Loan();
 
     this.gameService.getGames().subscribe((games) => {
@@ -71,9 +76,28 @@ export class LoanEditComponent implements OnInit {
   }
 
   onSave() {
-    this.loanService.saveLoan(this.loan).subscribe((result) => {
-      this.dialogRef.close();
-      console.log(this.loan);
+
+    this.loanService.saveLoan(this.loan).subscribe({
+      next: () => {
+        this.dialogRef.close();
+      },
+      error: (err) => {
+        let errorMessage = 'Ocurrió un error inesperado';
+        const differenceInMilliseconds = this.loan.returnDate.getTime() - this.loan.loanDate.getTime();
+        if (this.loan.returnDate.getTime() < this.loan.loanDate.getTime()) {
+          errorMessage = 'La fecha de devolución no puede ser anterior a la fecha del préstamo';
+        }
+        else if (differenceInMilliseconds > (1000 * 3600 * 24 * 14)) {
+          errorMessage = 'La fecha de devolución no puede ser superior a 14 días';
+        }
+        if (err.status === 409) {
+          errorMessage = 'El juego ya está prestado para esas fechas o el cliente tiene dos juegos prestados';
+        }
+        else if (err.status === 500) {
+          errorMessage = 'Hubo un error en el servidor, inténtalo de nuevo más tarde';
+        }
+        this.snackbar.open(errorMessage, 'Ok', { verticalPosition: 'top', horizontalPosition: 'center' });
+      }
     })
   }
 

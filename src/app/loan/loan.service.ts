@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 //import { LOAN_DATA } from './model/mock-loans';
 import { Observable, of } from 'rxjs';
 import { Loan } from './model/Loan';
-import { Pageable } from '../core/model/page/Pageable';
 import { HttpClient } from '@angular/common/http';
+import { LoanPage } from './model/LoanPage';
+import { LoanSearchDto } from './model/LoanSearchDto';
 
 @Injectable({
   providedIn: 'root'
@@ -14,33 +15,19 @@ export class LoanService {
 
   private baseUrl = 'http://localhost:8080/loan';
 
-  getLoans(gameId?: number, customerId?: number, selectedDate?: string): Observable<Loan[]> {
+  getLoans(loanSearchDto: LoanSearchDto): Observable<LoanPage> {
 
-    return this.http.get<Loan[]>(this.composeFindUrl(gameId, customerId, selectedDate));
+    return this.http.post<LoanPage>(this.baseUrl, loanSearchDto);
   }
 
   saveLoan(loan: Loan): Observable<Loan> {
-    return of(null);
 
+    return this.http.put<Loan>(this.baseUrl, loan);
   }
 
-  deleteLoan(idLoan: number): Observable<any> {
-    return of(null);
+  deleteLoan(idLoan: number): Observable<void> {
+    
+    return this.http.delete<void>(`${this.baseUrl}/${idLoan}`);
   }
 
-  private composeFindUrl(gameId?: number, customerId?: number, selectedDate?: string): string {
-    const params = new URLSearchParams();
-    if (gameId) {
-      params.set('idGame', gameId.toString());
-    }
-    if (customerId) {
-      params.set('idCustomer', customerId.toString());
-    }
-    if (selectedDate) {
-      params.set('date', selectedDate)
-    }
-    const queryString = params.toString();
-
-    return queryString ? `${this.baseUrl}?${queryString}` : this.baseUrl;
-  }
 }
