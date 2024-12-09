@@ -30,8 +30,6 @@ export class LoanEditComponent implements OnInit {
   loan: Loan;
   games: Game[];
   customers: Customer[];
-  loanDate: Date;
-  returnDate: Date;
 
   private readonly _currentYear = new Date().getFullYear();
   readonly minDate = new Date();
@@ -77,26 +75,36 @@ export class LoanEditComponent implements OnInit {
 
   onSave() {
 
+    const showErrorMessage = (message: string) => {
+      this.snackbar.open(message, 'Ok', {
+        verticalPosition: 'top',
+        horizontalPosition: 'center'
+      });
+    };
+    let errorMessage = 'Ocurrió un error inesperado';
+    const differenceInMilliseconds = this.loan.returnDate.getTime() - this.loan.loanDate.getTime();
+
+    if (this.loan.returnDate.getTime() < this.loan.loanDate.getTime()) {
+      showErrorMessage('La fecha de devolución no puede ser anterior a la fecha del préstamo');
+      return;
+    }
+    else if (differenceInMilliseconds > (1000 * 3600 * 24 * 14)) {
+      showErrorMessage('La fecha de devolución no puede ser superior a 14 días');
+      return;
+    }
+  
     this.loanService.saveLoan(this.loan).subscribe({
       next: () => {
         this.dialogRef.close();
       },
       error: (err) => {
-        let errorMessage = 'Ocurrió un error inesperado';
-        const differenceInMilliseconds = this.loan.returnDate.getTime() - this.loan.loanDate.getTime();
-        if (this.loan.returnDate.getTime() < this.loan.loanDate.getTime()) {
-          errorMessage = 'La fecha de devolución no puede ser anterior a la fecha del préstamo';
-        }
-        else if (differenceInMilliseconds > (1000 * 3600 * 24 * 14)) {
-          errorMessage = 'La fecha de devolución no puede ser superior a 14 días';
-        }
         if (err.status === 409) {
           errorMessage = 'El juego ya está prestado para esas fechas o el cliente tiene dos juegos prestados';
         }
         else if (err.status === 500) {
           errorMessage = 'Hubo un error en el servidor, inténtalo de nuevo más tarde';
         }
-        this.snackbar.open(errorMessage, 'Ok', { verticalPosition: 'top', horizontalPosition: 'center' });
+        showErrorMessage(errorMessage);
       }
     })
   }
